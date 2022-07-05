@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary> Manages the state of the level </summary>
 public class LevelManager : MonoBehaviour
 {
-    public int Score { get; private set; }
+    [SerializeField]
+    public ScoreManager scoreManager;
+
+    [SerializeField]
+    public MainCharacter mainCharacterPrefab;
+
+    private MainCharacter mainCharacter;
 
     [SerializeField]
     public GameObject platformPrefab;
@@ -14,22 +21,24 @@ public class LevelManager : MonoBehaviour
     public BoxCollider gameWorldBounds;
 
     [SerializeField]
-    private float secondsUntilNextPlatformSpawn = 1f;
+    private float platformDistance = 1f;
 
     [SerializeField]
-    private float gameWorldShiftSpeed = 2f;
-    
+    private float secondsUntilNextPlatformSpawn = 0f;
+
     void Start()
     {
-        
+        Reset();
     }
 
     void Update()
     {
+        var gameWorldShiftSpeed = Mathf.Sqrt(Mathf.Max(scoreManager.Score,5));
+
         secondsUntilNextPlatformSpawn -= Time.deltaTime;
         if(secondsUntilNextPlatformSpawn <= 0)
         {
-            secondsUntilNextPlatformSpawn = 2f;
+            secondsUntilNextPlatformSpawn = platformDistance / gameWorldShiftSpeed;
             var instantiatedPlatform = Instantiate(platformPrefab, new Vector3(0, gameWorldBounds.bounds.min.y, 0), Quaternion.identity);
             var movingPlatform = instantiatedPlatform.GetComponent<MovingPlatform>();
             instantiatedPlatform.transform.parent = gameObject.transform;
@@ -37,6 +46,8 @@ public class LevelManager : MonoBehaviour
             movingPlatform.despawnPositionY = gameWorldBounds.bounds.max.y;
             movingPlatform.gapRelativePosition = Random.Range(0.1f, 0.9f);
             movingPlatform.gapRelativeWidth = 0.2f;
+            movingPlatform.scoreManager = scoreManager;
+            movingPlatform.mainCharacter = mainCharacter;
         }
 
         var levelObjects = GetComponentsInChildren<LevelObject>();
@@ -44,16 +55,23 @@ public class LevelManager : MonoBehaviour
         {
             levelObject.ShiftUpwards(gameWorldShiftSpeed * Time.deltaTime);
         }
+
+        if(!gameWorldBounds.bounds.Contains(mainCharacter.transform.position))
+        {
+            Reset();
+        }
     }
 
-    public void IncrementScore()
+    void Reset()
     {
-        Score++;
-    }
+        scoreManager.ResetScore();
 
-    public void Reset()
-    {
-        Score = 0;
-        // reset logic
+        for(var i = 0; i < transform.childCount; ++i)
+        {
+            Destroy(transform.GetChild(i).gameObject);
+        }
+
+        mainCharacter = Instantiate(mainCharacterPrefab);
+        mainCharacter.transform.parent = transform;
     }
 }

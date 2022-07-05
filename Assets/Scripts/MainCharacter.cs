@@ -8,21 +8,20 @@ public class MainCharacter : LevelObject
     [SerializeField] private float speed;
     [SerializeField] private CharacterController characterController;
 
-    void Start()
-    {
-    }
-
     public override void ShiftUpwards(float amount)
     {
+        // Character Controllers do not like being teleported.
+        // The hacky solution to this is disabling them for the teleport.
+        // The clean solution would be to write a custom character controller
+        // that supports shifting around with the game world, but this costs
+        // quite a lot of time, so the hacky solution is employed here.
         characterController.enabled = false;
-        this.transform.position += Vector3.up * amount;
+        transform.position += Vector3.up * amount;
         characterController.enabled = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
-
         var movement = new Vector3(0, -gravity * 10f * Time.deltaTime, 0);
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -34,5 +33,4 @@ public class MainCharacter : LevelObject
         }
         characterController.Move(movement);
     }
-
 }

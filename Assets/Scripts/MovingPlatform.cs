@@ -25,6 +25,14 @@ public class MovingPlatform : LevelObject
     [SerializeField]
     private GameObject platformRight;
 
+    [SerializeField]
+    public ScoreManager scoreManager;
+
+    [SerializeField]
+    public MainCharacter mainCharacter;
+
+    private bool scoreAwarded = false;
+
     void Start()
     {
         SetupPlatforms();
@@ -61,6 +69,11 @@ public class MovingPlatform : LevelObject
 
         if (Application.isPlaying)
         {
+            if(!scoreAwarded && mainCharacter.transform.position.y < transform.position.y)
+            {
+                scoreAwarded = true;
+                scoreManager.IncreaseScore();
+            }
 
             if(transform.position.y > despawnPositionY)
             {
