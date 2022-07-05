@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 
 [ExecuteInEditMode()]
-public class MovingPlatform : MonoBehaviour
+public class MovingPlatform : LevelObject
 {
-    [SerializeField]
-    private float speed;
-
     [SerializeField]
     [Range(0.0f, float.MaxValue)]
     public float totalWidth = 10f;
@@ -64,13 +61,11 @@ public class MovingPlatform : MonoBehaviour
 
         if (Application.isPlaying)
         {
-            transform.position += Vector3.up * speed;
 
             if(transform.position.y > despawnPositionY)
             {
-                Destroy(this);
+                Destroy(gameObject);
             }
         }
     }
-
 }

@@ -15,6 +15,9 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField]
     private float secondsUntilNextPlatformSpawn = 1f;
+
+    [SerializeField]
+    private float gameWorldShiftSpeed = 2f;
     
     void Start()
     {
@@ -29,10 +32,17 @@ public class LevelManager : MonoBehaviour
             secondsUntilNextPlatformSpawn = 2f;
             var instantiatedPlatform = Instantiate(platformPrefab, new Vector3(0, gameWorldBounds.bounds.min.y, 0), Quaternion.identity);
             var movingPlatform = instantiatedPlatform.GetComponent<MovingPlatform>();
+            instantiatedPlatform.transform.parent = gameObject.transform;
             movingPlatform.totalWidth = gameWorldBounds.size.x;
             movingPlatform.despawnPositionY = gameWorldBounds.bounds.max.y;
             movingPlatform.gapRelativePosition = Random.Range(0.1f, 0.9f);
             movingPlatform.gapRelativeWidth = 0.2f;
+        }
+
+        var levelObjects = GetComponentsInChildren<LevelObject>();
+        foreach(var levelObject in levelObjects)
+        {
+            levelObject.ShiftUpwards(gameWorldShiftSpeed * Time.deltaTime);
         }
     }
 
