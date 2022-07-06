@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MainCharacter : LevelObject
 {
-    [SerializeField] private float gravity = 1.0f;
+    [SerializeField] private float minGravity = -1.0f;
+    [SerializeField] private float gravityAccelleration = -1.0f;
     [SerializeField] private float speed;
+    private float currentGravityVelocity = 1.0f;
     [SerializeField] private CharacterController characterController;
 
     public override void ShiftUpwards(float amount)
@@ -22,14 +24,20 @@ public class MainCharacter : LevelObject
 
     void Update()
     {
-        var movement = new Vector3(0, -gravity * 10f * Time.deltaTime, 0);
+        currentGravityVelocity += gravityAccelleration * Time.deltaTime;
+        if (characterController.collisionFlags == CollisionFlags.Below)
+        {
+            currentGravityVelocity = minGravity;
+        }
+
+        var movement = new Vector3(0, currentGravityVelocity * Time.deltaTime, 0);
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            movement += Vector3.left * speed;
+            movement += Vector3.left * speed * Time.deltaTime;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            movement += Vector3.right * speed;
+            movement += Vector3.right * speed * Time.deltaTime;
         }
         characterController.Move(movement);
     }

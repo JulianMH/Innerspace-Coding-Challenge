@@ -11,10 +11,16 @@ public class ScoreManager : MonoBehaviour
     public int HighScore { get; private set; }
 
     [SerializeField]
+    public bool AchievedNewHighscore { get; private set; }
+
+    [SerializeField]
     private Text scoreText;
 
     [SerializeField]
     private Text highscoreText;
+
+    [SerializeField]
+    private Text newHighscoreText;
 
     public void Start()
     {
@@ -33,6 +39,11 @@ public class ScoreManager : MonoBehaviour
         {
             highscoreText.text = $"Highscore: {HighScore}";
         }
+
+        if (highscoreText != null)
+        {
+            newHighscoreText.gameObject.SetActive(AchievedNewHighscore);
+        }
     }
 
     public void IncreaseScore()
@@ -41,6 +52,7 @@ public class ScoreManager : MonoBehaviour
         if(Score > HighScore)
         {
             HighScore = Score;
+            AchievedNewHighscore = true;
         }
 
         UpdateScoreText();
@@ -49,6 +61,7 @@ public class ScoreManager : MonoBehaviour
     public void ResetScore()
     {
         Score = 0;
+        AchievedNewHighscore = false;
         UpdateScoreText();
     }
 

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 
-[ExecuteInEditMode()]
 public class MovingPlatform : LevelObject
 {
     [SerializeField]
@@ -38,6 +37,11 @@ public class MovingPlatform : LevelObject
         SetupPlatforms();
     }
 
+    private void OnValidate()
+    {
+        SetupPlatforms();
+    }
+
     void SetupPlatforms()
     {
         var halfWidth = 0.5f * totalWidth;
@@ -65,20 +69,15 @@ public class MovingPlatform : LevelObject
 
     void Update()
     {
-        SetupPlatforms();
-
-        if (Application.isPlaying)
+        if(!scoreAwarded && mainCharacter.transform.position.y < transform.position.y)
         {
-            if(!scoreAwarded && mainCharacter.transform.position.y < transform.position.y)
-            {
-                scoreAwarded = true;
-                scoreManager.IncreaseScore();
-            }
+            scoreAwarded = true;
+            scoreManager.IncreaseScore();
+        }
 
-            if(transform.position.y > despawnPositionY)
-            {
-                Destroy(gameObject);
-            }
+        if(transform.position.y > despawnPositionY)
+        {
+            Destroy(gameObject);
         }
     }
 }

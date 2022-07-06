@@ -1,13 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary> Manages the state of the level </summary>
 public class LevelManager : MonoBehaviour
 {
+    public GameState GameState { get; private set; }
+
     [SerializeField]
     public ScoreManager scoreManager;
+
+    [SerializeField]
+    public GameObject pauseMenu;
+
+    [SerializeField]
+    public GameObject gameOverMenu;
 
     [SerializeField]
     public MainCharacter mainCharacterPrefab;
@@ -26,17 +35,21 @@ public class LevelManager : MonoBehaviour
     [SerializeField]
     private float secondsUntilNextPlatformSpawn = 0f;
 
+    [SerializeField]
+    [Range(5, 100)]
+    private int initialSpeed = 5;
+
     void Start()
     {
-        Reset();
+        StartNewGame();
     }
 
     void Update()
     {
-        var gameWorldShiftSpeed = Mathf.Sqrt(Mathf.Max(scoreManager.Score,5));
+        var gameWorldShiftSpeed = Mathf.Sqrt(scoreManager.Score + initialSpeed);
 
         secondsUntilNextPlatformSpawn -= Time.deltaTime;
-        if(secondsUntilNextPlatformSpawn <= 0)
+        if (secondsUntilNextPlatformSpawn <= 0)
         {
             secondsUntilNextPlatformSpawn = platformDistance / gameWorldShiftSpeed;
             var instantiatedPlatform = Instantiate(platformPrefab, new Vector3(0, gameWorldBounds.bounds.min.y, 0), Quaternion.identity);
@@ -51,18 +64,23 @@ public class LevelManager : MonoBehaviour
         }
 
         var levelObjects = GetComponentsInChildren<LevelObject>();
-        foreach(var levelObject in levelObjects)
+        foreach (var levelObject in levelObjects)
         {
             levelObject.ShiftUpwards(gameWorldShiftSpeed * Time.deltaTime);
         }
 
-        if(!gameWorldBounds.bounds.Contains(mainCharacter.transform.position))
+        if (!gameWorldBounds.bounds.Contains(mainCharacter.transform.position))
         {
-            Reset();
+            SetGameOver();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame();
         }
     }
 
-    void Reset()
+    void StartNewGame()
     {
         scoreManager.ResetScore();
 
@@ -73,5 +91,43 @@ public class LevelManager : MonoBehaviour
 
         mainCharacter = Instantiate(mainCharacterPrefab);
         mainCharacter.transform.parent = transform;
+        mainCharacter.transform.position = gameWorldBounds.center;
+
+        SetGameState(GameState.Running);
+    }
+
+    private void SetGameState(GameState gameState)
+    {
+        GameState = gameState;
+
+        enabled = GameState == GameState.Running;
+        var levelObjects = GetComponentsInChildren<LevelObject>();
+        foreach (var levelObject in levelObjects)
+        {
+            levelObject.enabled = enabled;
+        }
+
+        pauseMenu.SetActive(GameState == GameState.Paused);
+        gameOverMenu.SetActive(GameState == GameState.GameOver);
+    }
+
+    void PauseGame()
+    {
+        SetGameState(GameState.Paused);
+    }
+
+    void ResumeGame()
+    {
+        SetGameState(GameState.Running);
+    }
+
+    void SetGameOver()
+    {
+        SetGameState(GameState.GameOver);
+    }
+
+    void GoToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }
