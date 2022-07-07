@@ -2,13 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary> Player character of the game. </summary>
 public class MainCharacter : LevelObject
 {
-    [SerializeField] private float minGravity = -1.0f;
-    [SerializeField] private float gravityAccelleration = -1.0f;
-    [SerializeField] private float speed;
+    [SerializeField]
+    private float minGravity = -1.0f;
+
+    [SerializeField]
+    private float gravityAccelleration = -1.0f;
+
+    [SerializeField]
+    private float speed;
+
+    [SerializeField]
     private float currentGravityVelocity = 1.0f;
-    [SerializeField] private CharacterController characterController;
+
+    [SerializeField]
+    private CharacterController characterController;
 
     public override void ShiftUpwards(float amount)
     {

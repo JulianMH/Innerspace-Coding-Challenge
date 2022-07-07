@@ -146,6 +146,7 @@ MonoBehaviour:
   platformRight: {fileID: 1366744936099908623}
   scoreManager: {fileID: 0}
   mainCharacter: {fileID: 0}
+  scoreAwarded: 0
 --- !u!1 &6026872603878850671
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,29 +2,36 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary> Manages, persists and displays the player score. </summary>
 public class ScoreManager : MonoBehaviour
 {
-    [SerializeField]
-    public int Score { get; private set; }
+    public int Score { get { return _score; } }
+    public int HighScore { get { return _highScore; } }
+    public bool AchievedNewHighscore { get { return _achievedNewHighScore; } }
 
     [SerializeField]
-    public int HighScore { get; private set; }
+    [Range(0, 10000)]
+    int _score;
 
     [SerializeField]
-    public bool AchievedNewHighscore { get; private set; }
+    [Range(0, 10000)]
+    int _highScore;
 
     [SerializeField]
-    private Text scoreText;
+    bool _achievedNewHighScore;
 
     [SerializeField]
-    private Text highscoreText;
+    Text scoreText;
 
     [SerializeField]
-    private Text newHighscoreText;
+    Text highscoreText;
+
+    [SerializeField]
+    Text newHighscoreText;
 
     public void Start()
     {
-        HighScore = PlayerPrefs.GetInt("HighScore",0);
+        _highScore = PlayerPrefs.GetInt("HighScore",0);
         UpdateScoreText();
     }
 
@@ -32,27 +39,28 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = $"Score: {Score}";
+            scoreText.text = $"Score: {_score}";
         }
 
         if (highscoreText != null)
         {
-            highscoreText.text = $"Highscore: {HighScore}";
+            highscoreText.text = $"Highscore: {_highScore}";
         }
 
-        if (highscoreText != null)
+        if (newHighscoreText != null)
         {
-            newHighscoreText.gameObject.SetActive(AchievedNewHighscore);
+            newHighscoreText.text = $"New Highscore: {_highScore}";
+            newHighscoreText.gameObject.SetActive(_achievedNewHighScore);
         }
     }
 
     public void IncreaseScore()
     {
-        ++Score;
-        if(Score > HighScore)
+        ++_score;
+        if(_score > _highScore)
         {
-            HighScore = Score;
-            AchievedNewHighscore = true;
+            _highScore = _score;
+            _achievedNewHighScore = true;
         }
 
         UpdateScoreText();
@@ -60,8 +68,8 @@ public class ScoreManager : MonoBehaviour
 
     public void ResetScore()
     {
-        Score = 0;
-        AchievedNewHighscore = false;
+        _score = 0;
+        _achievedNewHighScore = false;
         UpdateScoreText();
     }
 

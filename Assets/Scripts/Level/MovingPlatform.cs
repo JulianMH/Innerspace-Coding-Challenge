@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+/// <summary> A platform obstacle for the player to navigate. </summary>
 public class MovingPlatform : LevelObject
 {
     [SerializeField]
@@ -19,10 +20,10 @@ public class MovingPlatform : LevelObject
     public float gapRelativeWidth = 0.1f;
 
     [SerializeField]
-    private GameObject platformLeft;
+    GameObject platformLeft;
 
     [SerializeField]
-    private GameObject platformRight;
+    GameObject platformRight;
 
     [SerializeField]
     public ScoreManager scoreManager;
@@ -30,7 +31,8 @@ public class MovingPlatform : LevelObject
     [SerializeField]
     public MainCharacter mainCharacter;
 
-    private bool scoreAwarded = false;
+    [SerializeField]
+    bool scoreAwarded = false;
 
     void Start()
     {
@@ -50,7 +52,6 @@ public class MovingPlatform : LevelObject
         var plaformLeftWidth = (gapRelativePosition - 0.5f * gapRelativeWidth) * totalWidth;
         var platformRightStart = platformLeftStart + plaformLeftWidth + (gapRelativeWidth * totalWidth);
         var plaformRightWidth = halfWidth - platformRightStart;
-
 
         platformLeft.SetActive(plaformLeftWidth > 0);
         if (plaformLeftWidth > 0)
