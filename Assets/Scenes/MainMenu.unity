@@ -44,14 +44,14 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
     m_IndirectOutputScale: 1
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 0
-    m_EnableBakedLightmaps: 1
+    m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 1
   m_LightmapEditorSettings:
     serializedVersion: 12
@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: cf8a45723eb5449cf90a8117ec36d012,
+    type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -544,6 +545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01a90b0d30c85464d838ac7e37dec3cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _score: 0
+  _highScore: 0
+  _achievedNewHighScore: 0
   scoreText: {fileID: 0}
   highscoreText: {fileID: 1763594200}
   newHighscoreText: {fileID: 0}

@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5662799565086316943}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &5662799565086317043
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -96,6 +96,7 @@ MonoBehaviour:
   minGravity: -2
   gravityAccelleration: -40
   speed: 10
+  currentGravityVelocity: 1
   characterController: {fileID: -4980265382944271017}
 --- !u!143 &-4980265382944271017
 CharacterController:
